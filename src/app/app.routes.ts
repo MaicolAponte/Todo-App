@@ -9,6 +9,9 @@ export const routes: Routes = [
     { path: 'register', component: Register},
     { path: 'home', component: Home, children: [
       {path: 'admin', component: Admin},
+      {path: 'workTeams', component: Admin},
+      {path: 'myTaskList', component: Admin},
+      {path: 'tools', component: Admin},
       { path: '', redirectTo: 'admin', pathMatch: 'full' },
       { path: '**', redirectTo: 'admin', pathMatch: 'full' },
     ]},

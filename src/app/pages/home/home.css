@@ -1,0 +1,6 @@
+aside {
+  transition: transform 0.3s ease-in-out;
+}
+a[routerLinkActive] {
+  font-weight: 600;
+}
