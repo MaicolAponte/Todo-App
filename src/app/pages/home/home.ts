@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,10 +9,11 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   styleUrl: './home.css'
 })
 export class Home {
-  sidebarOpen = true;
+  sidebarOpen = false;
   nombreUsuario = 'Maicol Aponte';
   correoUsuario = 'maicol.aponte@mail.com';
   avatarUsuario = 'https://i.pravatar.cc/100';
+  isDesktop = window.innerWidth >= 768;
   // Links del sidebar cargados desde TS
   sidebarLinks = [
     {
@@ -39,6 +40,16 @@ export class Home {
   logout() {
     // Aquí irá la lógica de salir
     console.log('Salir');
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    console.log(event.target.innerWidth)
+    if (event.target.innerWidth >=768) {
+      this.isDesktop = true
+    } else {
+      this.isDesktop = false
+    }
   }
 
 }
