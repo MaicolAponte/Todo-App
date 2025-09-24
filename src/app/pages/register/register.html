@@ -1,0 +1,122 @@
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-r from-blue-600 to-emerald-200">
+  <div class="w-full max-w-md p-6 bg-white rounded-2xl shadow-md">
+    <!-- Imagen superior -->
+    <div class="flex justify-center mb-1">
+      <img src="logo.png" alt="Logo" class="h-10 w-40 md:h-22 md:w-52 lg:h-30 lg:w-60 object-contain" />
+    </div>
+    <hr class="mb-2">
+
+    <!-- Título -->
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Registro</h1>
+      <p class="text-sm text-gray-500">Crea tu cuenta llenando la información</p>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="registerForm" class="space-y-4" (ngSubmit)="onSubmit()">
+      <!-- Nombre completo -->
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+          placeholder="Nombre Completo"
+        />
+        @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+            <small class="text-red-500 text-xs">
+              El nombre es requerido
+            </small>
+        }
+      </div>
+
+      <!-- Tipo de documento -->
+      <div>
+        <label for="tipoDoc" class="block text-sm font-medium text-gray-700">Tipo de documento</label>
+        <select
+          id="tipoDoc"
+          formControlName="tipoDoc"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+        >
+          <option value="">Seleccione...</option>
+          <option value="CC">Cédula de ciudadanía</option>
+          <option value="TI">Tarjeta de identidad</option>
+          <option value="CE">Cédula de extranjería</option>
+          <option value="PA">Pasaporte</option>
+          <option value="Otro">Otro</option>
+        </select>
+        @if (registerForm.get('tipoDoc')?.invalid && registerForm.get('tipoDoc')?.touched) {
+            <small class="text-red-500 text-xs">
+              Selecciona un tipo de documento
+            </small>
+        }
+      </div>
+
+      <!-- Número de numDoc -->
+      <div>
+        <label for="numDoc" class="block text-sm font-medium text-gray-700">Número de documento</label>
+        <input
+          type="text"
+          id="numDoc"
+          formControlName="numDoc"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+          placeholder="Número de documento"
+        />
+        @if (registerForm.get('documento')?.invalid && registerForm.get('documento')?.touched) {
+            <small class="text-red-500 text-xs">
+              Ingresa un número de documento válido
+            </small>
+        }
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Correo</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+          placeholder="Correo electronico"
+        />
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <small class="text-red-500 text-xs">
+              Ingresa un correo válido
+            </small>
+        }
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+        <input
+          type="tel"
+          id="telefono"
+          formControlName="telefono"
+          class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+          placeholder="telefono"
+        />
+        @if (registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched) {
+            <small class="text-red-500 text-xs">
+              Ingresa un número válido
+            </small>
+        }
+      </div>
+
+      <!-- Botón -->
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid"
+        class="w-full rounded-lg bg-emerald-600 text-white py-2 font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Registrarme
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="mt-4 text-center">
+      <a href="/login" class="text-sm text-blue-600 hover:underline">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+  </div>
+</div>
