@@ -1,5 +1,7 @@
 import { Component, HostListener } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { Auth, signOut } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +16,7 @@ export class Home {
   correoUsuario = 'maicol.aponte@mail.com';
   avatarUsuario = 'https://i.pravatar.cc/100';
   isDesktop = window.innerWidth >= 768;
+
   // Links del sidebar cargados desde TS
   sidebarLinks = [
     {
@@ -33,23 +36,25 @@ export class Home {
     },
   ];
 
+  // Inyectamos servicios
+  private auth = inject(Auth);
+  private router = inject(Router);
+
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
   }
 
-  logout() {
-    // Aquí irá la lógica de salir
-    console.log('Salir');
+  async logout() {
+    try {
+      await signOut(this.auth);
+      this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    console.log(event.target.innerWidth)
-    if (event.target.innerWidth >=768) {
-      this.isDesktop = true
-    } else {
-      this.isDesktop = false
-    }
+    this.isDesktop = event.target.innerWidth >= 768;
   }
-
 }

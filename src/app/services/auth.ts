@@ -1,70 +1,34 @@
-// src/app/services/auth.service.ts
-import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, UserCredential } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { Auth, signInWithEmailAndPassword, signOut, User } from '@angular/fire/auth';
+import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
+import { from, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private auth = inject(Auth);
   private firestore = inject(Firestore);
-  private router = inject(Router);
+  constructor(private auth: Auth) {}
 
-  private currentUser: any = null;
-
-  constructor() {}
-
-  // ✅ Login
-  async loginEmail(email: string, password: string) {
-    const credential = await signInWithEmailAndPassword(this.auth, email, password);
-    await this.loadUserData(credential.user.uid);
+  // Login
+  login(email: string, password: string): Observable<any> {
+    return from(signInWithEmailAndPassword(this.auth, email, password));
   }
 
-  // ✅ Registro
-  async registerUser(email: string, password: string, extraData: any) {
-    const credential: UserCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-    const uid = credential.user.uid;
-
-    const userDoc = doc(this.firestore, `Users/${uid}`);
-    await setDoc(userDoc, {
-      ...extraData,
-      email,
-    });
-
-    await this.loadUserData(uid);
+  // Logout
+  logout(): Observable<void> {
+    return from(signOut(this.auth));
   }
 
-  // ✅ Obtener datos del usuario desde Firestore
-  private async loadUserData(uid: string) {
-    const userDoc = doc(this.firestore, `Users/${uid}`);
-    const snapshot = await getDoc(userDoc);
-    if (snapshot.exists()) {
-      this.currentUser = { uid, ...snapshot.data() };
-    } else {
-      this.currentUser = null;
-    }
-    console.log(this.currentUser)
+  // Usuario actual
+  get currentUser(): User | null {
+    return this.auth.currentUser;
   }
 
-  // ✅ Saber si está logueado
-  isLoggedIn(): boolean {
-    return !!this.currentUser;
-  }
+  async getUserByEmail(email: string) {
+    const usersRef = collection(this.firestore, 'Users');
+    const q = query(usersRef, where('email', '==', email));
+    const snapshot = await getDocs(q);
 
-  // ✅ Obtener rol
-  getUserRole(): string | null {
-    return this.currentUser?.rol || null;
-  }
-
-  // ✅ Obtener usuario
-  getCurrentUser() {
-    return this.currentUser;
-  }
-
-  // ✅ Logout
-  async logout() {
-    await this.auth.signOut();
-    this.currentUser = null;
-    this.router.navigate(['/login']);
+    if (snapshot.empty) return null;
+    return snapshot.docs[0].data() as any;
   }
 }

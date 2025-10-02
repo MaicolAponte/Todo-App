@@ -1,19 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { Auth } from '@angular/fire/auth';
-import { onAuthStateChanged } from '@angular/fire/auth';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const noGuardGuard: CanActivateFn = (route, state) => {
   const auth = inject(Auth);
   const router = inject(Router);
 
   return new Promise<boolean>((resolve) => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        resolve(true); // ✅ Usuario logueado
-      } else {
-        router.navigate(['/login']); // ❌ No autenticado → redirigir
+        router.navigate(['/home']); // 🔄 Si ya está logueado → redirigir a home
         resolve(false);
+      } else {
+        resolve(true); // ✅ Si no está logueado, permitir acceso
       }
     });
   });
